@@ -1,7 +1,7 @@
 class Message < ApplicationRecord
   include ActionView::RecordIdentifier
 
-  enum role: { system: 0, assistant: 10, user: 20 }
+  enum :role, { system: 0, assistant: 10, user: 20 }
 
   belongs_to :chat
 
@@ -10,7 +10,7 @@ class Message < ApplicationRecord
 
   def broadcast_created
     broadcast_append_later_to(
-      "#{dom_id(chat)}_messages",
+      chat,
       partial: "messages/message",
       locals: { message: self, scroll_to: true },
       target: "#{dom_id(chat)}_messages"
@@ -18,11 +18,11 @@ class Message < ApplicationRecord
   end
 
   def broadcast_updated
-    broadcast_append_to(
-      "#{dom_id(chat)}_messages",
+    broadcast_replace_to(
+      chat,
+      target:  dom_id(self),
       partial: "messages/message",
       locals: { message: self, scroll_to: true },
-      target: "#{dom_id(chat)}_messages"
     )
   end
 

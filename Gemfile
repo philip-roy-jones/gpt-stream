@@ -62,5 +62,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "ruby-openai"
-gem "sidekiq"
+gem "tailwindcss-rails"
+gem "ruby-openai", "~> 4.0.0"
+gem "sidekiq", "~> 7.2.0"
+gem "devise"

@@ -31,11 +31,14 @@ class GetAiResponse < SidekiqJob
   end
 
   def stream_proc(chat:)
+    puts "stream_proc for chat #{chat.id}"
     messages = create_messages(chat: chat)
     proc do |chunk, _bytesize|
       new_content = chunk.dig("choices", 0, "delta", "content")
       message = messages.find { |m| m.response_number == chunk.dig("choices", 0, "index") }
-      message.update(content: message.content + new_content) if new_content
+      if new_content.present?
+        message.update(content: message.content + new_content)
+      end
     end
   end
 end
