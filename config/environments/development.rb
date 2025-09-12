@@ -72,4 +72,7 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :sidekiq
 
+  config.action_cable.url = "ws://localhost:3000/cable"
+  config.action_cable.allowed_request_origins = [/http:\/\/localhost:\d+/, /http:\/\/127\.0\.0\.1:\d+/]
+
 end

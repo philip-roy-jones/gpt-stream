@@ -66,3 +66,4 @@ gem "tailwindcss-rails"
 gem "ruby-openai", "~> 4.0.0"
 gem "sidekiq", "~> 7.2.0"
 gem "devise"
+gem 'redis', '~> 5'

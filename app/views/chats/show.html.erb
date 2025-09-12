@@ -4,8 +4,9 @@
     <div class="bg-white py-8">
       <div class="mx-auto max-w-lg px-6 ">
         <ul role="list" class="overflow-y-auto max-h-[48vh] flex flex-col-reverse">
-          <%= turbo_stream_from @chat %>
-          <div id="<%= dom_id(@chat) %>_messages">
+          <%= turbo_stream_from [@chat, :messages] %>
+
+          <div id="<%= dom_id(@chat, :messages) %>">
             <%= render @chat.messages %>
           </div>
         </ul>
