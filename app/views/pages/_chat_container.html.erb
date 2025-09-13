@@ -1,0 +1,42 @@
+<% if @chats.present? %>
+  <div class="flex flex-col space-y-3 bg-gray-100 rounded-lg p-2 h-[calc(100vh-180px)] overflow-y-auto overflow-x-hidden">
+    <% @chats.each do |chat| %>
+      <% last_message = chat.messages.order(updated_at: :desc).first %>
+      <%= link_to chat_path(chat), class: "bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200" do %>
+        <div class="p-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-medium text-gray-900">Chat #<%= chat.id %></span>
+            <span class="text-xs text-gray-500"><%= time_ago_in_words(last_message&.created_at || chat.created_at) %>
+              ago</span>
+          </div>
+
+          <div class="text-sm text-gray-600 mb-1">
+            <% if last_message.present? %>
+                <span class="<%= last_message.role == 0 ? 'text-blue-600' : 'text-gray-700' %>">
+                  <%= truncate(last_message.content, length: 60) %>
+                </span>
+            <% else %>
+              <span class="italic text-gray-500">No messages yet</span>
+            <% end %>
+          </div>
+
+          <div class="flex justify-between items-center mt-2">
+              <span class="text-xs text-gray-500">
+                <%= pluralize(chat.messages.count, 'message') %>
+              </span>
+
+            <% if last_message.present? && last_message.created_at > 24.hours.ago %>
+              <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Recent</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="text-center py-12 bg-gray-50 rounded-lg h-[calc(100vh-180px)] overflow-y-auto">
+    <p class="text-gray-600 mb-4">You don't have any conversations yet.</p>
+    <%= link_to "Start a new conversation", chats_path, method: :post, data: { turbo_method: :post }, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+<% end %>
+
