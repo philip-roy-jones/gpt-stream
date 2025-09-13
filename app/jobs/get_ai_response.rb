@@ -11,7 +11,7 @@ class GetAiResponse < SidekiqJob
   def call_openai(chat:)
     OpenAI::Client.new.chat(
       parameters: {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini-2024-07-18",
         messages: Message.for_openai(chat.messages),
         temperature: 0.8,
         stream: stream_proc(chat: chat),
