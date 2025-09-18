@@ -1,7 +1,14 @@
 class ChatStreamJob < SidekiqJob
+  # Add uniqueness constraint based on message ID
+  sidekiq_options unique: :until_executed, unique_args: ->(args) { [args[1]] }
+
   def perform(chat_id, message_id)
-    @chat = Chat.find(chat_id)
     @message = Message.find(message_id)
+
+    # Skip if message already has content
+    return if @message.content.present?
+
+    @chat = Chat.find(chat_id)
     @buffer = ""
     @last_sent_position = 0
     @last_broadcast_time = Time.current
