@@ -1,8 +1,27 @@
-<div id="<%= dom_id(message) %>" class="message p-4 rounded-lg <%= message.role == 'assistant' ? 'bg-gray-100' : 'bg-white border' %>">
-  <div class="font-bold mb-1"><%= message.role.capitalize %></div>
-  <% if message.content.present? %>
-    <div class="message-content"><%= message.content %></div>
-  <% else %>
-    <div id="msg_<%= message.id %>_chunks" class="message-chunks"></div>
-  <% end %>
-</div>
+<% if message.user? %>
+  <div id="<%= dom_id(message) %>"
+       class="relative message bg-blue-500 rounded-lg m-8 text-white p-4 break-words">
+    <% if message.content.present? %>
+      <%= message.content %>
+    <% else %>
+      <div id="msg_<%= message.id %>_chunks" class="message-chunks"></div>
+    <% end %>
+    <div class="absolute right-[-10px] top-4 w-0 h-0
+                border-t-[10px] border-t-transparent
+                border-b-[10px] border-b-transparent
+                border-l-[10px] border-l-blue-500"></div>
+  </div>
+<% else %>
+  <div id="<%= dom_id(message) %>"
+       class="relative message bg-gray-200 rounded-lg m-8 p-4 break-words">
+    <% if message.content.present? %>
+      <%= message.content %>
+    <% else %>
+      <div id="msg_<%= message.id %>_chunks" class="message-chunks"></div>
+    <% end %>
+    <div class="absolute left-[-10px] top-4 w-0 h-0
+                border-t-[10px] border-t-transparent
+                border-b-[10px] border-b-transparent
+                border-r-[10px] border-r-gray-200"></div>
+  </div>
+<% end %>
