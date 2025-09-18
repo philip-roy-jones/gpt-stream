@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :messages, only: [:create]
 
   # Nested messages for existing chats
-  resources :chats, only: %i[create show] do
+  resources :chats, only: %i[show new] do
     resources :messages, only: %i[create]
   end
 

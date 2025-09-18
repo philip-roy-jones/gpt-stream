@@ -27,7 +27,6 @@ class MessagesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update("chat_container", partial: "chats/chat", locals: { chat: @chat }),
-          turbo_stream.update("page_title", content_tag(:title, @chat.title)),
           # Add a hidden field with the URL that we'll use with JavaScript
           turbo_stream.append("chat_container",
                               "<div id='url_updater' data-url='#{chat_path(@chat)}' style='display:none;'></div>".html_safe)
