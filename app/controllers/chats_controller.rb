@@ -7,6 +7,7 @@ class ChatsController < ApplicationController
   def new
     @chat = Chat.new
     respond_to do |format|
+      format.html { render "pages/home" }
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update("chat_container", partial: "chats/new", locals: { chat: @chat }),
@@ -20,6 +21,7 @@ class ChatsController < ApplicationController
 
   def show
     respond_to do |format|
+      format.html { render "pages/home" }
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat }),

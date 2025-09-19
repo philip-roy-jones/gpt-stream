@@ -2,19 +2,26 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
     connect() {
-        document.addEventListener("turbo:before-stream-render", this.updateUrl)
+        document.addEventListener("turbo:before-stream-render", this.afterStreamRender)
     }
 
     disconnect() {
-        document.removeEventListener("turbo:before-fetch-response", this.updateUrl)
+        document.removeEventListener("turbo:before-stream-render", this.afterStreamRender)
     }
 
-    updateUrl = (event) => {
-        const updater = document.getElementById('url_updater')
-        if (updater && updater.dataset.url) {
-            console.log(`Updating URL to: ${updater.dataset.url}`)
-            history.pushState({}, '', updater.dataset.url)
-            updater.remove() // Remove after using
+    afterStreamRender = (event) => {
+        const originalRender = event.detail.render
+
+        event.detail.render = async (streamElement) => {
+            // Let Turbo do its thing first
+            await originalRender(streamElement)
+
+            // ✅ Now DOM changes are applied
+            const urlUpdater = document.getElementById("url_updater")
+            if (urlUpdater) {
+                history.pushState({}, "", urlUpdater.dataset.url)
+                urlUpdater.remove()
+            }
         }
     }
 }

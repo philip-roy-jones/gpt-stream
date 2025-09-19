@@ -1,8 +1,10 @@
 <div class="w-full h-full max-w-3xl mx-auto p-4">
   <div id="chat_container" class="h-full">
-<!--    <h3 class="text-xl font-semibold mb-6 text-center">New Conversation</h3>-->
-
-    <%= render "chats/new" %>
+    <% if @chat.persisted? %>
+      <%= render "chats/show", chat: @chat %>
+    <% else %>
+      <%= render "chats/new" %>
+    <% end %>
   </div>
 
 </div>
