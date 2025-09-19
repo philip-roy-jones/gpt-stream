@@ -1,0 +1,11 @@
+<%= link_to chat_path(chat),
+            id: "chat_item_#{chat.id}",
+            class: "block p-2 rounded-md #{selected ? 'bg-blue-100 border-l-4 border-blue-500' : 'hover:bg-gray-100'}",
+            data: { turbo_stream: true } do %>
+  <div class="truncate">
+    <%= chat.title || "Chat ##{chat.id}" %>
+  </div>
+  <div class="text-xs text-gray-500">
+    <%= chat.updated_at.strftime("%b %d, %Y") %>
+  </div>
+<% end %>

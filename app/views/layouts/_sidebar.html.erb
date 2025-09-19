@@ -28,16 +28,7 @@
       <!-- Chat list -->
       <div class="space-y-2">
         <% current_user.chats.order(updated_at: :desc).each do |chat| %>
-          <%= link_to chat_path(chat),
-                      class: "block p-2 rounded-md #{@chat&.id == chat.id ? 'bg-blue-100 border-l-4 border-blue-500' : 'hover:bg-gray-100'}",
-                      data: { turbo_stream: true } do %>
-            <div class="truncate">
-              <%= chat.title || "Chat ##{chat.id}" %>
-            </div>
-            <div class="text-xs text-gray-500">
-              <%= chat.updated_at.strftime("%b %d, %Y") %>
-            </div>
-          <% end %>
+          <%= render "chats/chat_item", chat: chat, selected: @chat&.id == chat.id %>
         <% end %>
       </div>
     </div>
