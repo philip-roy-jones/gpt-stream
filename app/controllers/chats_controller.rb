@@ -12,13 +12,12 @@ class ChatsController < ApplicationController
     session[:selected_chat_id] = nil
 
     respond_to do |format|
-      format.html { render "pages/home" }
       format.turbo_stream do
         streams = [
           turbo_stream.update("chat_container", partial: "chats/new", locals: { chat: @chat }),
           # Add a hidden field with the URL that we'll use with JavaScript
           turbo_stream.append("chat_container",
-                              "<div id='url_updater' data-url='#{new_chat_path(@chat)}' style='display:none;'></div>".html_safe)
+                              "<div id='url_updater' data-url='#{root_path}' style='display:none;'></div>".html_safe)
         ]
 
         # Update previously selected chat if it exists
