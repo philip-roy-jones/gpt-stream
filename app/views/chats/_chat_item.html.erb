@@ -6,6 +6,10 @@
     <%= chat.title || "Chat ##{chat.id}" %>
   </div>
   <div class="text-xs text-gray-500">
-    <%= chat.updated_at.strftime("%b %d, %Y") %>
+    <%= if chat.updated_at > 24.hours.ago
+          "#{time_ago_in_words(chat.updated_at)} ago"
+        else
+          chat.updated_at.strftime("%b %d, %Y")
+        end %>
   </div>
 <% end %>
