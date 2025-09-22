@@ -43,4 +43,10 @@ export default class extends Controller {
             this.element.classList.add("-translate-x-full")
         }
     }
+
+    preventFocus(event) {
+        if (event.pointerType === "mouse" || event.pointerType === "pen") {
+            event.preventDefault()
+        }
+    }
 }
