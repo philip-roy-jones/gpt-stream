@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   before_action :authenticate_user!
-  def home
+  def index
     @chat = Chat.new
     @chats = current_user&.chats&.order(updated_at: :desc)
   end

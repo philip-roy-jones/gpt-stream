@@ -1,57 +1,29 @@
 // app/javascript/controllers/sidebar_controller.js
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 
 const scrollPositions = {}
 
 export default class extends Controller {
-    static targets = ["panel"]
+    static targets = ["chatList"]
 
     connect() {
-        // Hide sidebar by default on mobile
-        if (window.innerWidth < 768) {
-            this.close()
-        }
-
-        window.addEventListener("resize", this.handleResize.bind(this))
-
         document.addEventListener("turbo:before-render", this.storeScroll)
         document.addEventListener("turbo:render", this.restoreScroll)
+
+        this.updateActive()
+        document.addEventListener("turbo:load", this.updateActive)
+        document.addEventListener("turbo:render", this.updateActive)
     }
 
     disconnect() {
-        window.removeEventListener("resize", this.handleResize.bind(this))
         document.removeEventListener("turbo:before-render", this.storeScroll)
         document.removeEventListener("turbo:render", this.restoreScroll)
+
+        document.removeEventListener("turbo:load", this.updateActive)
+        document.removeEventListener("turbo:render", this.updateActive)
     }
 
-    handleResize() {
-        if (window.innerWidth >= 768) {
-            this.open()
-        } else {
-            this.close()
-        }
-    }
-
-    toggle() {
-        if (this.element.classList.contains("hidden") ||
-            this.element.classList.contains("-translate-x-full")) {
-            this.open()
-        } else {
-            this.close()
-        }
-    }
-
-    open() {
-        this.element.classList.remove("hidden", "-translate-x-full")
-    }
-
-    close() {
-        if (window.innerWidth < 768) {
-            this.element.classList.add("-translate-x-full")
-        }
-    }
-
-    storeScroll() {
+    storeScroll = () => {
         document.querySelectorAll("[data-turbo-keep-scroll]").forEach((el) => {
             if (el.id) {
                 scrollPositions[el.id] = el.scrollTop
@@ -59,11 +31,27 @@ export default class extends Controller {
         })
     }
 
-    restoreScroll() {
+    restoreScroll = () => {
         document.querySelectorAll("[data-turbo-keep-scroll]").forEach((el) => {
             if (el.id && scrollPositions[el.id] !== undefined) {
                 el.scrollTop = scrollPositions[el.id]
             }
+        })
+    }
+
+    updateActive = () => {
+        const container =
+            this.element.querySelector('[data-sidebar-target="chatList"]') ||
+            document.getElementById("sidebar-scroll")
+
+        if (!container) return
+
+        const path = window.location.pathname
+        container.querySelectorAll("a[href]").forEach((a) => {
+            const url = new URL(a.href, window.location.origin)
+            const isActive = url.pathname === path
+            a.classList.toggle("active", isActive)
+            a.setAttribute("aria-current", isActive ? "page" : "")
         })
     }
 }
