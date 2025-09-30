@@ -5,14 +5,17 @@ class MessagesController < ApplicationController
   before_action :authenticate_user!
 
   def create
+    new_chat = false
+
     # Create a new chat if needed, or use existing one
     @chat = if params[:chat_id].present?
               Chat.find(params[:chat_id])
-            else
+    else
               # Auto-create chat with title from first message
               title = message_params[:content].truncate(40)
+              new_chat = true
               Chat.create(user: current_user, title: title)
-            end
+    end
 
     # Create user message
     @message = Message.create(message_params.merge(chat_id: @chat.id, role: "user"))
@@ -25,12 +28,14 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat }),
-          # Add a hidden field with the URL that we'll use with JavaScript
-          turbo_stream.append("chat_container",
-                              "<div id='url_updater' data-url='#{chat_path(@chat)}' style='display:none;'></div>".html_safe)
-        ]
+        if new_chat
+          head :see_other, location: chat_path(@chat)
+        else
+          render turbo_stream: [
+            turbo_stream.append("messages_list", partial: "messages/message", locals: { message: @message }),
+            turbo_stream.append("messages_list", partial: "messages/message", locals: { message: @assistant_message })
+          ]
+        end
       end
     end
   end

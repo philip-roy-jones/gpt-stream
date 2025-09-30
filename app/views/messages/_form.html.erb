@@ -1,4 +1,4 @@
-<%= form_with model: [chat, Message.new], class: "w-full" do |form| %>
+<%= form_with model: [chat, Message.new], class: "w-full", data: { controller: "form" } do |form| %>
   <label class="sr-only" for="prompt">Ask anything</label>
 
   <div
@@ -13,6 +13,7 @@
                         placeholder: "Ask anything",
                         required: true,
                         autocomplete: "off",
+                        data: { "form-target": "input" },
                         class: "peer w-full bg-transparent text-sm md:text-base
                 text-slate-800 placeholder-slate-400
                 focus:outline-none px-2" %>
