@@ -10,7 +10,6 @@ export default class extends Controller {
         document.addEventListener("turbo:before-render", this.storeScroll)
         document.addEventListener("turbo:render", this.restoreScroll)
 
-        this.updateActive()
         document.addEventListener("turbo:load", this.updateActive)
         document.addEventListener("turbo:render", this.updateActive)
     }
