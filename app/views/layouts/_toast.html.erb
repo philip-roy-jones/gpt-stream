@@ -1,0 +1,25 @@
+<div data-controller="toast" data-toast-duration-value="5000" class="absolute left-1/2 transform -translate-x-1/2 top-6 z-50 pointer-events-none w-full max-w-md">
+  <% if notice.present? %>
+    <div data-toast-target="message" data-toast-type="notice" class="toast pointer-events-auto">
+      <div class="toast-inner flex items-start gap-3">
+        <div class="toast-icon flex items-center justify-center">🔔</div>
+        <div class="toast-body">
+          <div class="toast-text text-sm text-gray-900"><%= notice %></div>
+        </div>
+        <button type="button" class="toast-close ml-2" data-action="click->toast#close" aria-label="Close">×</button>
+      </div>
+    </div>
+  <% end %>
+
+  <% if alert.present? %>
+    <div data-toast-target="message" data-toast-type="alert" class="toast pointer-events-auto">
+      <div class="toast-inner flex items-start gap-3">
+        <div class="toast-icon flex items-center justify-center">⚠️</div>
+        <div class="toast-body">
+          <div class="toast-text text-sm text-gray-900"><%= alert %></div>
+        </div>
+        <button type="button" class="toast-close ml-2" data-action="click->toast#close" aria-label="Close">×</button>
+      </div>
+    </div>
+  <% end %>
+</div>
