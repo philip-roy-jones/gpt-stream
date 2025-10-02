@@ -1,0 +1,71 @@
+<div class="w-full flex min-h-screen items-center justify-center bg-gray-50 p-4">
+  <div class="w-full max-w-md rounded-2xl bg-white shadow-xl overflow-hidden">
+    <!-- iMessage header -->
+    <div class="bg-gray-200 px-4 py-3 flex items-center justify-center border-b">
+      <h2 class="text-xl font-semibold text-gray-800">Login</h2>
+    </div>
+
+    <!-- Chat container -->
+    <div class="bg-[#f5f5f5] p-6 space-y-6" style="background-image: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\' fill=\'%23e5e7eb\' fill-opacity=\'0.2\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');">
+      <!-- Login message bubble -->
+      <div class="relative bg-gray-200 rounded-2xl rounded-tl-none mx-4 p-4 shadow-sm">
+        <div class="absolute left-[-10px] top-4 w-0 h-0
+                border-t-[10px] border-t-transparent
+                border-b-[10px] border-b-transparent
+                border-r-[10px] border-r-gray-200"></div>
+        <p class="text-gray-700 text-sm mb-1">Please sign in to continue</p>
+      </div>
+
+      <!-- Login form as blue bubble -->
+      <div class="relative bg-blue-500 rounded-2xl rounded-tr-none mx-4 p-5 shadow-sm text-white">
+        <div class="absolute right-[-10px] top-4 w-0 h-0
+                border-t-[10px] border-t-transparent
+                border-b-[10px] border-b-transparent
+                border-l-[10px] border-l-blue-500"></div>
+
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="mb-4">
+            <%= f.label :email, class: "block font-medium mb-1" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email",
+                              class: "w-full rounded-lg border-0 bg-white/20 p-2 text-white placeholder-white/70 focus:ring-2 focus:ring-white/50 focus:outline-none" %>
+          </div>
+
+          <div class="mb-4">
+            <%= f.label :password, class: "block font-medium mb-1" %>
+            <%= f.password_field :password, autocomplete: "current-password",
+                                 class: "w-full rounded-lg border-0 bg-white/20 p-2 text-white placeholder-white/70 focus:ring-2 focus:ring-white/50 focus:outline-none" %>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="mb-4 flex items-center">
+              <%= f.check_box :remember_me, class: "rounded border-white/30 text-white bg-white/20 focus:ring-white/50" %>
+              <%= f.label :remember_me, class: "ml-2 text-sm" %>
+            </div>
+          <% end %>
+
+          <div class="mt-5">
+            <%= f.submit "Log in", class: "w-full flex items-center justify-center gap-2 bg-white text-blue-600 font-medium py-2 px-4 rounded-full hover:bg-blue-50 transition" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Links in a message bubble -->
+      <div class="relative bg-gray-200 rounded-2xl rounded-tl-none mx-4 p-4 shadow-sm">
+        <div class="absolute left-[-10px] top-4 w-0 h-0
+                border-t-[10px] border-t-transparent
+                border-b-[10px] border-b-transparent
+                border-r-[10px] border-r-gray-200"></div>
+        <div class="text-center text-sm text-gray-700 space-y-2">
+          <%= render "devise/shared/links" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- iMessage bottom bar -->
+    <div class="bg-gray-100 p-3 border-t">
+      <div class="flex justify-center">
+        <div class="w-32 h-1 bg-gray-300 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+</div>

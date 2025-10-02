@@ -1,0 +1,33 @@
+<!-- gpt-stream-logo-mckinley-centered.svg -->
+<svg width="800" height="256" viewBox="0 0 800 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title>GPT Stream Logo</title>
+  <style>
+    .wordmark {
+    font-family: "McKinley", Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    }
+    .wordmark.dark { fill: #0F172A; }
+    .wordmark.light { fill: #FFFFFF; }
+  </style>
+
+  <!-- ICON -->
+  <g transform="translate(0,0)">
+    <defs>
+      <linearGradient id="imsg" x1="30" y1="30" x2="226" y2="226" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#0A84FF"/>
+        <stop offset="1" stop-color="#64D2FF"/>
+      </linearGradient>
+    </defs>
+    <path d="M64 56h128c22.091 0 40 17.909 40 40v44c0 22.091-17.909 40-40 40H120l-41.5 28.5c-5.6 3.8-12.5-2-10.1-8.1L78 180H64c-22.091 0-40-17.909-40-40v-44c0-22.091 17.909-40 40-40Z" fill="url(#imsg)"/>
+    <rect x="74" y="114" width="90" height="12" rx="6" fill="white" opacity="0.92"/>
+    <rect x="74" y="138" width="54" height="12" rx="6" fill="white" opacity="0.88"/>
+    <rect x="170" y="114" width="4" height="36" rx="2" fill="white"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <!-- vertically centered between bubble top (y≈56) and tail bottom (y≈212) -->
+  <g transform="translate(280,104)">
+    <text class="wordmark dark" x="0" y="56" font-size="84" letter-spacing="-1">GPT</text>
+    <text class="wordmark dark" x="190" y="56" font-size="84" letter-spacing="-1">Stream</text>
+  </g>
+</svg>
