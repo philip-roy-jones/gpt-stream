@@ -1,3 +1,4 @@
+// javascript
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
@@ -13,13 +14,14 @@ export default class extends Controller {
         // ensure starting state
         el.classList.remove("toast--hide");
 
-        // auto-dismiss
-        // el.dismissTimer = setTimeout(() => this.closeElement(el), this.durationValue);
-
         // pointer drag to dismiss
         let startY = null;
         let currentY = 0;
         const onPointerDown = (e) => {
+            // ignore pointerstart on interactive elements so clicks (like the close button) still fire
+            if (e.target.closest('button, a, input, textarea, select, [role="button"], [data-action]')) {
+                return;
+            }
             startY = e.clientY;
             el.setPointerCapture?.(e.pointerId);
             el.style.transition = "none";
@@ -55,7 +57,6 @@ export default class extends Controller {
 
     close(event) {
         // called by close button
-        console.log("close button clicked");
         const el = event.currentTarget.closest(".toast");
         if (el) this.closeElement(el);
     }
