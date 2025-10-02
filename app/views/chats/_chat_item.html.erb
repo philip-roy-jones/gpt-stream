@@ -1,14 +1,7 @@
 <%= link_to chat_path(chat),
             id: "chat_item_#{chat.id}",
-            class: "block p-2 rounded-md hover:bg-gray-100" do %>
+            class: "block p-2 rounded-md hover:bg-gray-200" do %>
   <div class="truncate">
     <%= chat.title || "Chat ##{chat.id}" %>
-  </div>
-  <div class="text-xs text-gray-500">
-    <%= if chat.updated_at > 24.hours.ago
-          "#{time_ago_in_words(chat.updated_at)} ago"
-        else
-          chat.updated_at.strftime("%b %d, %Y")
-        end %>
   </div>
 <% end %>
