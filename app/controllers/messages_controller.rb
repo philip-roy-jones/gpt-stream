@@ -29,7 +29,10 @@ class MessagesController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         if new_chat
-          head :see_other, location: chat_path(@chat)
+          render turbo_stream: [
+            turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat }),
+            turbo_stream.append("js-container", content_tag(:div, "", data: { push_url: chat_path(@chat) }))
+          ]
         else
           render turbo_stream: [
             turbo_stream.append("messages_list", partial: "messages/message", locals: { message: @message }),
