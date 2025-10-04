@@ -14,6 +14,11 @@ export default class extends Controller {
         // ensure starting state
         el.classList.remove("toast--hide");
 
+        // Add auto-dismiss timer
+        el.dismissTimer = setTimeout(() => {
+            this.closeElement(el);
+        }, this.durationValue);
+
         // pointer drag to dismiss
         let startY = null;
         let currentY = 0;
