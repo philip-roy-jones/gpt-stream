@@ -11,9 +11,21 @@ class ChatStreamJob < SidekiqJob
     return if @message.content.present?
 
     @chat = Chat.find(chat_id)
+    @user = @chat.user
     @buffer = ""
     @last_sent_position = 0
     @last_broadcast_time = Time.current
+
+    # Set streaming flag
+    @chat.update(is_streaming: true)
+
+    # Update the UI to show cancel button
+    Turbo::StreamsChannel.broadcast_replace_to(
+      @user,
+      target: "form_button_container",
+      partial: "messages/form_button_container",
+      locals: { form: nil, is_streaming: true }
+    )
 
     call_openai
   end
@@ -49,6 +61,18 @@ class ChatStreamJob < SidekiqJob
         broadcast_chunk if @last_sent_position < @buffer.length
         @message.update(content: @buffer)
         broadcast_replace
+
+        # Set streaming flag back to false
+        @chat.update(is_streaming: false)
+        Rails.logger.info("[ChatStreamJob] starting for chat=#{@chat.id} message=#{@message.id} user=#{@user&.id} REDIS=#{ENV['REDIS_URL'] || 'default'}")
+
+        # Update the UI to show send button
+        Turbo::StreamsChannel.broadcast_replace_to(
+          @user,
+          target: "form_button_container",
+          partial: "messages/form_button_container",
+          locals: { form: nil, is_streaming: false }
+        )
       end
     end
   end
@@ -57,22 +81,37 @@ class ChatStreamJob < SidekiqJob
     chunk = @buffer[@last_sent_position..-1]
     return if chunk.blank?
 
-    Turbo::StreamsChannel.broadcast_append_to(
-      @chat,
+    safe_broadcast_append(
+      @user,
       target: "msg_#{@message.id}_chunks",
       partial: "messages/chunk",
-      locals: { chunk: chunk }
+      locals: { chunk: chunk },
+      tag: "chunk"
     )
 
     @last_sent_position = @buffer.length
   end
 
   def broadcast_replace
-    Turbo::StreamsChannel.broadcast_replace_to(
-      @chat,
+    safe_broadcast_replace(
+      @user,
       target: dom_id(@message),
       partial: "messages/message",
-      locals: { message: @message }
-    )
+      locals: { message: @message },
+      tag: "final_replace")
+  end
+
+  def safe_broadcast_append(record, target:, partial:, locals:, tag: nil)
+    # Rails.logger.info("[ChatStreamJob] broadcast_append_to chat=#{record.id} target=#{target} tag=#{tag}")
+    Turbo::StreamsChannel.broadcast_append_to(record, target: target, partial: partial, locals: locals)
+  rescue => e
+    Rails.logger.error("[ChatStreamJob] broadcast_append_to FAILED for chat=#{record.id} target=#{target} tag=#{tag} error=#{e.class}: #{e.message}\n#{e.backtrace.first(5).join("\n")}")
+  end
+
+  def safe_broadcast_replace(record, target:, partial:, locals:, tag: nil)
+    # Rails.logger.info("[ChatStreamJob] broadcast_replace_to chat=#{record.id} target=#{target} tag=#{tag}")
+    Turbo::StreamsChannel.broadcast_replace_to(record, target: target, partial: partial, locals: locals)
+  rescue => e
+    Rails.logger.error("[ChatStreamJob] broadcast_replace_to FAILED for chat=#{record.id} target=#{target} tag=#{tag} error=#{e.class}: #{e.message}\n#{e.backtrace.first(5).join("\n")}")
   end
 end

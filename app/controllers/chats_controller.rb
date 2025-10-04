@@ -1,5 +1,5 @@
 class ChatsController < ApplicationController
-  respond_to :html, :json
+  respond_to :html, :turbo_stream
 
   before_action :authenticate_user!
   before_action :set_chat, only: %i[show]
@@ -21,10 +21,15 @@ class ChatsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { render "pages/index" }
+      puts "Rendering HTML for chat ##{@chat.id}"
+      format.html do
+        render :show
+      end
+      puts "Rendering turbo stream for chat ##{@chat.id}"
       format.turbo_stream do
         streams = [
-          turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat })
+          turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat }),
+          turbo_stream.append("js-container", content: view_context.tag.div("", data: { push_url: chat_path(@chat) }))
         ]
 
         render turbo_stream: streams

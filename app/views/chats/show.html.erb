@@ -1,0 +1,4 @@
+<!-- file: `app/views/chats/show.html.erb` (full page that Turbo expects for non-frame requests) -->
+<turbo-frame id="chat_container" class="h-full w-full">
+  <%= render "show", chat: @chat %>
+</turbo-frame>

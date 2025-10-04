@@ -9,7 +9,24 @@ class MessagesController < ApplicationController
 
     # Create a new chat if needed, or use existing one
     @chat = if params[:chat_id].present?
-              Chat.find(params[:chat_id])
+              chat = Chat.find(params[:chat_id])
+
+              # Check if chat is currently streaming
+              if chat.is_streaming
+                puts "Chat is currently streaming, cannot add new message"
+                respond_to do |format|
+                  format.turbo_stream do
+                    render turbo_stream: turbo_stream.replace(
+                      "toast",
+                      partial: "layouts/toast",
+                      locals: { alert: "Please wait until your current message has finished or cancel to stop the current message" }
+                    )
+                  end
+                end
+                return
+              end
+
+              chat
     else
               # Auto-create chat with title from first message
               title = message_params[:content].truncate(40)

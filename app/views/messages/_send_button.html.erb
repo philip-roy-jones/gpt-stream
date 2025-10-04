@@ -1,0 +1,16 @@
+<% if defined?(form) && form.present? %>
+  <%= form.submit "Send",
+                  class: "shrink-0 inline-flex h-9 px-5 items-center justify-center rounded-full
+                      bg-blue-500 text-white text-sm font-medium min-w-18
+                      hover:bg-blue-700 focus:outline-none
+                      focus-visible:ring-2 focus-visible:bg-blue-700",
+                  data: { disable_with: "Sending..." } %>
+<% else %>
+  <%= button_tag "Send",
+                 type: "submit",
+                 class: "shrink-0 inline-flex h-9 px-5 items-center justify-center rounded-full
+                      bg-blue-500 text-white text-sm font-medium min-w-18
+                      hover:bg-blue-700 focus:outline-none
+                      focus-visible:ring-2 focus-visible:bg-blue-700",
+                 data: { disable_with: "Sending..." } %>
+<% end %>
