@@ -16,6 +16,14 @@ export default class extends Controller {
         this.element.removeEventListener("ajax:complete", this.clearOnAjax)
     }
 
+    // Focus the input when container is clicked, but ignore clicks on interactive elements.
+    focusInput(event) {
+        const tag = event.target.tagName
+        const interactiveTags = new Set(["INPUT", "TEXTAREA", "BUTTON", "A", "SELECT", "LABEL"])
+        if (interactiveTags.has(tag) || event.target.closest("[data-no-focus]")) return
+        this.inputTarget.focus()
+    }
+
     clearOnTurbo(event) {
         if (!this.hasInputTarget) return
         // turbo:submit-end provides event.detail.success
