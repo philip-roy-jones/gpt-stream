@@ -35,6 +35,13 @@ class ChatsController < ApplicationController
   private
 
   def set_chat
-    @chat = Chat.find(params[:id])
+    @chat = current_user.chats.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: 'Not authorized to access that chat.' }
+      format.turbo_stream { head :forbidden }
+      format.json { head :forbidden }
+    end
   end
+
 end
