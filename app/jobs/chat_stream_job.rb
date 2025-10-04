@@ -55,7 +55,6 @@ class ChatStreamJob < SidekiqJob
 
   def broadcast_chunk
     chunk = @buffer[@last_sent_position..-1]
-    pp chunk
     return if chunk.blank?
 
     Turbo::StreamsChannel.broadcast_append_to(
