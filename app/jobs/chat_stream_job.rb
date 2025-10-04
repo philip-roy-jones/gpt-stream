@@ -1,4 +1,6 @@
 class ChatStreamJob < SidekiqJob
+  include ActionView::RecordIdentifier
+
   # Add uniqueness constraint based on message ID
   sidekiq_options unique: :until_executed, unique_args: ->(args) { [args[1]] }
 
@@ -53,6 +55,7 @@ class ChatStreamJob < SidekiqJob
 
   def broadcast_chunk
     chunk = @buffer[@last_sent_position..-1]
+    pp chunk
     return if chunk.blank?
 
     Turbo::StreamsChannel.broadcast_append_to(
