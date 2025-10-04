@@ -31,6 +31,7 @@ class MessagesController < ApplicationController
         if new_chat
           render turbo_stream: [
             turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat }),
+            turbo_stream.remove("no-chats-message"),
             turbo_stream.prepend("sidebar-scroll", partial: "chats/chat_item", locals: { chat: @chat }),
             turbo_stream.append("js-container", content_tag(:div, "", data: { push_url: chat_path(@chat) }))
           ]
