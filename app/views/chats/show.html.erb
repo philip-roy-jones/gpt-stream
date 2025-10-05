@@ -1,22 +1,4 @@
-<div class="container mx-auto mt-28 px-5 flex">
-  <div class="mx-auto w-full flex">
-    <div class="mx-auto">
-      <%= link_to "← Back to Home", root_path, class: "inline-block mb-4 text-blue-600 hover:text-blue-800" %>
-
-      <div class="bg-white py-8">
-        <div class="mx-auto w-md px-6 ">
-          <ul role="list" class="overflow-y-auto max-h-[48vh] flex flex-col-reverse mb-4">
-            <%= turbo_stream_from [@chat, :messages] %>
-
-            <div id="<%= dom_id(@chat, :messages) %>">
-              <%= render @chat.messages %>
-            </div>
-          </ul>
-
-          <%= render partial: "messages/form", locals: { chat: @chat } %>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
+<!-- file: `app/views/chats/show.html.erb` (full page that Turbo expects for non-frame requests) -->
+<turbo-frame id="chat_container" class="h-full w-full">
+  <%= render "show", chat: @chat %>
+</turbo-frame>

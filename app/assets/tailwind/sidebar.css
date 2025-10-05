@@ -1,0 +1,5 @@
+@layer components {
+    .active {
+        @apply !bg-blue-100 !border-l-4 !border-blue-500;
+    }
+}

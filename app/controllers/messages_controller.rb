@@ -1,15 +1,63 @@
 class MessagesController < ApplicationController
   include ActionView::RecordIdentifier
+  include ActionView::Helpers::TagHelper
 
   before_action :authenticate_user!
 
   def create
-    @message = Message.create(message_params.merge(chat_id: params[:chat_id], role: "user"))
+    new_chat = false
 
-    GetAiResponse.perform_async(@message.chat_id)
+    # Create a new chat if needed, or use existing one
+    @chat = if params[:chat_id].present?
+              chat = Chat.find(params[:chat_id])
+
+              # Check if chat is currently streaming
+              if chat.is_streaming
+                puts "Chat is currently streaming, cannot add new message"
+                respond_to do |format|
+                  format.turbo_stream do
+                    render turbo_stream: turbo_stream.replace(
+                      "toast",
+                      partial: "layouts/toast",
+                      locals: { alert: "Please wait until your current message has finished or cancel to stop the current message" }
+                    )
+                  end
+                end
+                return
+              end
+
+              chat
+    else
+              # Auto-create chat with title from first message
+              title = message_params[:content].truncate(40)
+              new_chat = true
+              Chat.create(user: current_user, title: title)
+    end
+
+    # Create user message
+    @message = Message.create(message_params.merge(chat_id: @chat.id, role: "user"))
+
+    # Create empty assistant message
+    @assistant_message = @chat.messages.create(role: "assistant", content: "")
+
+    # Start streaming in background
+    ChatStreamJob.perform_async(@chat.id, @assistant_message.id)
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream do
+        if new_chat
+          render turbo_stream: [
+            turbo_stream.update("chat_container", partial: "chats/show", locals: { chat: @chat, push_url: chat_path(@chat) }),
+            turbo_stream.remove("no-chats-message"),
+            turbo_stream.prepend("sidebar-scroll", partial: "chats/chat_item", locals: { chat: @chat })
+          ]
+        else
+          render turbo_stream: [
+            turbo_stream.append("messages_list", partial: "messages/message", locals: { message: @message }),
+            turbo_stream.append("messages_list", partial: "messages/message", locals: { message: @assistant_message })
+          ]
+        end
+      end
     end
   end
 

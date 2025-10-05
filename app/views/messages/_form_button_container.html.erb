@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "form_button_container" do %>
+  <% if local_assigns[:is_streaming] %>
+    <%= render "messages/cancel_button", form: form %>
+  <% else %>
+    <%= render "messages/send_button", form: form %>
+  <% end %>
+<% end %>
