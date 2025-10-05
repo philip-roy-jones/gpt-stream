@@ -1,6 +1,6 @@
 <%= link_to chat_path(chat),
             id: "chat_item_#{chat.id}",
-            data: { turbo_frame: "chat_container" },
+            data: { turbo_frame: "chat_container", turbo_action: "advance" },
             class: "block p-2 rounded-md hover:bg-gray-200" do %>
   <div class="truncate">
     <%= chat.title || "Chat ##{chat.id}" %>
