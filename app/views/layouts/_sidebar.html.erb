@@ -25,7 +25,7 @@
     </div>
 
     <!-- Chat list -->
-    <div id="sidebar-scroll" data-turbo-keep-scroll data-turbo-permanent data-sidebar-target="chatList" class="flex-grow overflow-y-auto px-4 py-2 [overflow-anchor:none;]">
+    <div id="sidebar-scroll-<%= current_user&.id %>" data-turbo-keep-scroll data-turbo-permanent data-sidebar-target="chatList" class="flex-grow overflow-y-auto px-4 py-2 [overflow-anchor:none;]">
       <% if current_user.chats.length > 0 %>
         <% current_user.chats.order(updated_at: :desc).each do |chat| %>
           <%= render "chats/chat_item", chat: chat %>
