@@ -6,11 +6,11 @@ Rails.application.routes.draw do
   resources :messages, only: [:create]
 
   # Nested messages for existing chats
-  resources :chats, only: %i[show new] do
+  resources :chats, only: %i[show] do
     resources :messages, only: %i[create]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root "pages#index"
+  root "chats#new"
 end
