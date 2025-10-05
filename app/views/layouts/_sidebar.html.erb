@@ -9,7 +9,7 @@
   <!-- Sidebar content -->
   <div class="flex flex-col h-full">
     <div class="p-2 border-b border-gray-200">
-      <%= link_to root_path do %>
+      <%= link_to root_path, data: { turbo_frame: "chat_container", turbo_action: "advance" } do %>
         <%= render "layouts/header_brand" %>
       <% end %>
     </div>
