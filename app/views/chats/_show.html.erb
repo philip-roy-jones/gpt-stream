@@ -1,4 +1,6 @@
-<div data-controller="chat" class="flex flex-col h-full w-full max-w-3xl mx-auto">
+<div data-controller="chat"
+     data-chat-push-url-value="<%= (push_url if defined?(push_url)) %>"
+     class="flex flex-col h-full w-full max-w-3xl mx-auto">
   <!-- Chat header -->
   <% if chat.title.present? %>
     <div class="py-4 border-b border-gray-200">

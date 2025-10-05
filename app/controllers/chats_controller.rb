@@ -18,12 +18,6 @@ class ChatsController < ApplicationController
     end
 
     @chat = Chat.new
-
-    respond_to do |format|
-      format.html do
-        render :new
-      end
-    end
   end
 
   def show

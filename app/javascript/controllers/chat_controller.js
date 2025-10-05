@@ -5,10 +5,16 @@ export default class extends Controller {
     static targets = ["list"]
 
     static values = {
-        scrollThreshold: { type: Number, default: 100 }
+        scrollThreshold: { type: Number, default: 100 },
+        pushUrl: String
     }
 
     connect() {
+        if (this.hasPushUrlValue && this.pushUrlValue) {
+            history.pushState(null, "", this.pushUrlValue)
+        }
+        this.element.removeAttribute("data-chat-push-url-value")
+
         // Synchronous scroll to bottom before first paint
         const el = this.hasListTarget ? this.listTarget : this.element
         el.scrollTop = el.scrollHeight
