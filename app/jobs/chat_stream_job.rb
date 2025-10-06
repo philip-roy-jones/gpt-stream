@@ -12,6 +12,8 @@ class ChatStreamJob < SidekiqJob
 
     @chat = Chat.find(chat_id)
     @user = @chat.user
+    @stream_token = @user.stream_token
+
     @buffer = ""
     @last_sent_position = 0
     @last_broadcast_time = Time.current
@@ -21,7 +23,7 @@ class ChatStreamJob < SidekiqJob
 
     # Update the UI to show cancel button
     Turbo::StreamsChannel.broadcast_replace_to(
-      @user,
+      @stream_token,
       target: "form_button_container",
       partial: "messages/form_button_container",
       locals: { form: nil, is_streaming: true }
@@ -64,11 +66,11 @@ class ChatStreamJob < SidekiqJob
 
         # Set streaming flag back to false
         @chat.update(is_streaming: false)
-        Rails.logger.info("[ChatStreamJob] starting for chat=#{@chat.id} message=#{@message.id} user=#{@user&.id} REDIS=#{ENV['REDIS_URL'] || 'default'}")
+        # Rails.logger.info("[ChatStreamJob] starting for chat=#{@chat.id} message=#{@message.id} user=#{@user&.id} stream_token=#{@stream_token} REDIS=#{ENV['REDIS_URL'] || 'default'}")
 
         # Update the UI to show send button
         Turbo::StreamsChannel.broadcast_replace_to(
-          @user,
+          @stream_token,
           target: "form_button_container",
           partial: "messages/form_button_container",
           locals: { form: nil, is_streaming: false }
@@ -82,7 +84,7 @@ class ChatStreamJob < SidekiqJob
     return if chunk.blank?
 
     safe_broadcast_append(
-      @user,
+      @stream_token,
       target: "msg_#{@message.id}_chunks",
       partial: "messages/chunk",
       locals: { chunk: chunk },
@@ -94,7 +96,7 @@ class ChatStreamJob < SidekiqJob
 
   def broadcast_replace
     safe_broadcast_replace(
-      @user,
+      @stream_token,
       target: dom_id(@message),
       partial: "messages/message",
       locals: { message: @message },

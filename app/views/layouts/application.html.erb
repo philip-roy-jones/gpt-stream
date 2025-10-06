@@ -27,14 +27,14 @@
 
 <body>
 <div class="flex flex-col md:flex-row min-h-screen">
-  <% if user_signed_in? %>
-    <turbo-cable-stream-source
-      id="turbo-cable-stream-source"
-      data-turbo-permanent
-      channel="Turbo::StreamsChannel"
-      signed-stream-name="<%= Turbo::StreamsChannel.signed_stream_name(current_user) %>">
-    </turbo-cable-stream-source>
+  <turbo-cable-stream-source
+    id="turbo-cable-stream-source"
+    data-turbo-permanent
+    channel="Turbo::StreamsChannel"
+    signed-stream-name="<%= turbo_signed_stream_name_for_current_principal %>">
+  </turbo-cable-stream-source>
 
+  <% if user_signed_in? %>
     <%= render "layouts/sidebar" %>
   <% else %>
     <div class="absolute top-0 left-0 p-2 flex items- z-[9999]">
